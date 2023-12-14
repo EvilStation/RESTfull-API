@@ -1,0 +1,54 @@
+﻿@page "/set-params-async/{Parameter?}"
+
+@using System.Net.Http
+@inject HttpClient Http
+@using System.Net.Http.Json
+@using System.Threading.Tasks
+@using RESTfull.Domain.DTO
+
+<h3>Список сотрудников</h3>
+
+@if (fulfil && persons == null)
+{
+    <p>сотрудники отсутствуют.</p>
+}
+else if(!fulfil && persons == null)
+{
+    <p>Идет загрузка...</p>
+}
+
+@if(persons != null)
+{
+    <table cellpadding ="5"
+           style="border: 1px double rgb(0, 0, 0);">
+        <tr>
+            <th style ="border: 1px double rgb(0, 0, 0);">Имя</th>
+            <th style="border: 1px double rgb(0, 0, 0);">ID</th>
+        </tr>
+        @foreach (var person in persons)
+        {   
+            <tr>
+                <td style="border: 1px double rgb(0, 0, 0);">@person.Name</td>
+                <td style="border: 1px double rgb(0, 0, 0);">@person.Id</td>
+            </tr>
+        }
+    </table>
+}
+
+@code {
+    [Parameter]
+    public string MessageAdd { get; set; }
+
+    private List<EmployeeDTO> persons;
+    private bool fulfil = false;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        persons = await Http.GetFromJsonAsync<List<EmployeeDTO>>("https://localhost:7172/api/Employee");
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        persons = await Http.GetFromJsonAsync<List<EmployeeDTO>>("https://localhost:7172/api/Employee");
+        fulfil = true;
+    }
+}

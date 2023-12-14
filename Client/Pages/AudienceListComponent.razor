@@ -1,0 +1,54 @@
+﻿@using System.Net.Http
+@inject HttpClient Http
+@using System.Net.Http.Json
+@using System.Threading.Tasks
+@using RESTfull.Domain.DTO
+
+<h3>Список аудиторий</h3>
+
+@if (fulfil && audiences == null)
+{
+    <p>аудитории отсутствуют.</p>
+}
+else if (!fulfil && audiences == null)
+{
+    <p>Идет загрузка...</p>
+}
+
+@if (audiences != null)
+{
+    <table cellpadding ="5" style="border: 1px double rgb(0, 0, 0);">
+        <tr>
+            <th style="border: 1px double rgb(0, 0, 0);">Номер</th>
+            <th style="border: 1px double rgb(0, 0, 0);">ID Ответственного лица</th>
+            <th style="border: 1px double rgb(0, 0, 0);">тип аудитории</th>
+            <th style="border: 1px double rgb(0, 0, 0);">количество рабочих мест</th>
+        </tr>
+        @foreach (var audience in audiences)
+        {
+            <tr>
+                <td style="border: 1px double rgb(0, 0, 0);">@audience.AudienceNumber</td>
+                <td style="border: 1px double rgb(0, 0, 0);">@audience.EmployeeId</td>
+                <td style="border: 1px double rgb(0, 0, 0);">@audience.AudienceType</td>
+                <td style="border: 1px double rgb(0, 0, 0);">@audience.WorkplaceNum</td>
+            </tr>
+        }
+    </table>
+}
+@code {
+    [Parameter]
+    public string MessageAdd { get; set; }
+
+    private List<AudienceDTO> audiences;
+    private bool fulfil = false;
+
+    protected override async Task OnParametersSetAsync() =>
+        audiences = await Http.GetFromJsonAsync<List<AudienceDTO>>
+            ("https://localhost:7172/api/Audience");
+
+    protected override async Task OnInitializedAsync()
+    {
+        audiences = await Http.GetFromJsonAsync<List<AudienceDTO>>("https://localhost:7172/api/Audience");
+        fulfil = true;
+    }
+}

@@ -1,0 +1,23 @@
+﻿@using System.Net.Http
+@inject HttpClient Http
+@using System.Net.Http.Json
+@using System.Threading.Tasks
+@using RESTfull.Domain.DTO
+
+<h3></h3>
+<input @bind="newName" placeholder="Имя содрудника" />
+<button @onclick="AddPerson">Добавить</button>
+
+@code {
+    private string newName;
+
+    [Parameter]
+    public EventCallback<string> OnAddPerson { get; set; }
+
+    private async Task AddPerson()
+    {
+        await Http.PostAsJsonAsync("https://localhost:7172/api/Employee", newName);
+        newName = "";
+        await OnAddPerson.InvokeAsync("OK");
+    }
+}
