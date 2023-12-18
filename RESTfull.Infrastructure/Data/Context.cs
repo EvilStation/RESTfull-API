@@ -12,5 +12,13 @@ namespace RESTfull.Infrastructure.Data
         {
             Database.EnsureCreated();
         }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Audience>()
+                .HasOne(a => a.Employee)
+                .WithMany(e => e.Audiences)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.SetNull);
+        }
     }
 }

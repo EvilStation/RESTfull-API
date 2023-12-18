@@ -2,6 +2,7 @@
 using RESTfull.Domain.DTO;
 using RESTfull.Domain.Model;
 using RESTfull.Infrastructure.Data;
+using System.Text;
 
 namespace RESTfull.Infrastructure.Repository
 {
@@ -39,6 +40,7 @@ namespace RESTfull.Infrastructure.Repository
             if (employeeToDelete != null)
             {
                 _context.Employees.Remove(employeeToDelete);
+                /*
                 List<Audience> audiences = await _context.Audiences
                     .Where(a => a.EmployeeId == employeeToDelete.Id)
                     .ToListAsync();
@@ -48,9 +50,18 @@ namespace RESTfull.Infrastructure.Repository
                     audience.EmployeeId = Guid.Empty;
                 }
                 _context.Audiences.UpdateRange(audiences);
+                */
                 await _context.SaveChangesAsync();
             }
         }
+        public async Task<string> GetIdByName(string name) // для тестов
+        {
+            Employee employee = await _context.Employees
+                .Where(e => e.Name == name)
+                .FirstOrDefaultAsync();
+            return employee.Id.ToString();
+        }
+
 
     }
 }

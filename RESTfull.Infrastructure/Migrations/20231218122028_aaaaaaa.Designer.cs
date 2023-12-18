@@ -12,8 +12,8 @@ using RESTfull.Infrastructure.Data;
 namespace RESTfull.Infrastructure.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20231214130928_aaaaa")]
-    partial class aaaaa
+    [Migration("20231218122028_aaaaaaa")]
+    partial class aaaaaaa
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,7 +26,7 @@ namespace RESTfull.Infrastructure.Migrations
 
             modelBuilder.Entity("RESTfull.Domain.Model.Audience", b =>
                 {
-                    b.Property<Guid>("AudienceId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -37,13 +37,15 @@ namespace RESTfull.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("EmployeeId")
+                    b.Property<Guid?>("EmployeeId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("WorkplaceNum")
                         .HasColumnType("int");
 
-                    b.HasKey("AudienceId");
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
 
                     b.ToTable("Audiences");
                 });
@@ -61,6 +63,21 @@ namespace RESTfull.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Employees");
+                });
+
+            modelBuilder.Entity("RESTfull.Domain.Model.Audience", b =>
+                {
+                    b.HasOne("RESTfull.Domain.Model.Employee", "Employee")
+                        .WithMany("Audiences")
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("RESTfull.Domain.Model.Employee", b =>
+                {
+                    b.Navigation("Audiences");
                 });
 #pragma warning restore 612, 618
         }

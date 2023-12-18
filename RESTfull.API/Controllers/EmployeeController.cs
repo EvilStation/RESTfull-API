@@ -29,7 +29,7 @@ namespace RESTfull.API.Controllers
         // POST api/Employee
         [HttpPost]
         public async Task Post([FromBody] string name)
-        {
+        {   
             await _employeeRepository.AddEmployee(name);
         }
     }

@@ -29,9 +29,9 @@ namespace RESTfull.Infrastructure.Repository
         }
         public async Task AddAudience(AudienceDTO audienceInfo)
         {
-            Employee e = await _context.Employees.FirstOrDefaultAsync(e => e.Id == audienceInfo.EmployeeId);
+            Employee e = await _context.Employees.FirstOrDefaultAsync(e => e.Id.Equals(audienceInfo.EmployeeId));
             Audience a = await _context.Audiences.FirstOrDefaultAsync(e => e.AudienceNumber == audienceInfo.AudienceNumber);
-            if ((e != null || audienceInfo.EmployeeId == Guid.Empty) && a == null)
+            if ((e != null || audienceInfo.EmployeeId == null) && a == null)
             {
                 Audience audience = new();
                 audience.AudienceNumber = audienceInfo.AudienceNumber;
@@ -60,6 +60,13 @@ namespace RESTfull.Infrastructure.Repository
                 _context.Audiences.Remove(audience);
                 await _context.SaveChangesAsync();
             }
+        }
+        public async Task<string> GetIdByNumber(int number) // для тестов
+        {
+            Audience audience = await _context.Audiences
+                .Where(e => e.AudienceNumber == number)
+                .FirstOrDefaultAsync();
+            return audience.Id.ToString();
         }
     }
 }
