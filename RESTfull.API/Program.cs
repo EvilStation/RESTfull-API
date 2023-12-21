@@ -1,12 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using RESTfull.Infrastructure.Data;
-using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-
+builder.Services.AddSwaggerGen();
 
 
 string connection = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -29,6 +28,8 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();

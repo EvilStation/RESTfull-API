@@ -2,7 +2,6 @@
 using RESTfull.Domain.DTO;
 using RESTfull.Domain.Model;
 using RESTfull.Infrastructure.Data;
-using System.Text;
 
 namespace RESTfull.Infrastructure.Repository
 {
@@ -40,17 +39,6 @@ namespace RESTfull.Infrastructure.Repository
             if (employeeToDelete != null)
             {
                 _context.Employees.Remove(employeeToDelete);
-                /*
-                List<Audience> audiences = await _context.Audiences
-                    .Where(a => a.EmployeeId == employeeToDelete.Id)
-                    .ToListAsync();
-
-                foreach (var audience in audiences)
-                {
-                    audience.EmployeeId = Guid.Empty;
-                }
-                _context.Audiences.UpdateRange(audiences);
-                */
                 await _context.SaveChangesAsync();
             }
         }
